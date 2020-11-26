@@ -1,0 +1,401 @@
+/*===================================
+	=            USER CREATE            =
+	===================================*/
+	
+	static public function ctrCrearUsuario(){
+		$creator = ludciscorp\User::find(session('id'));
+		$corporation = $creator->corporation;
+		$usersCount = count($corporation->users);
+		if ($usersCount < $corporation->user_limit) {
+			if (session('rank')==2 || session('rank')==1000000) {
+				if (isset($_POST['newUser'])) {
+					if (preg_match('/^[a-zA-Z0-9ñÑáéíóúÁÉÍÓÚ ]+$/', $_POST["newName"]) &&
+					   preg_match('/^[a-zA-Z0-9 ]+$/', $_POST["newUsername"])) {
+					   	/*======================================
+					   	=            Validar Imagen            =
+					   	======================================*/
+					   	$ruta="";
+					   	if (isset($_FILES['photo']['tmp_name']) && !empty($_FILES['photo']['tmp_name'])) {
+					   		list($ancho,$alto) = getimagesize($_FILES['photo']['tmp_name']);
+					   		$nuevoAncho = 500;
+					   		$nuevoAlto = 500;
+					   		/*==========================================
+					   		=            CREANDO DIRECTORIO            =
+					   		==========================================*/
+					   		$directorio = "Views/img/usuarios/".$_POST['newUsername'];
+					   		mkdir($directorio,0755);
+					   		/*===========================================================================
+					   		=            Funciones defecto PHP dependiendo de tipo de imagen            =
+					   		===========================================================================*/
+					   		switch ($_FILES['photo']['type']) {
+					   			case 'image/jpeg':
+					   				$preruta = date('Y-m-d_his');
+					   				$preruta = (string)$preruta;
+					   				$ruta = $directorio.'/'.$_POST['newUsername'].'_'.$preruta.'.jpg';
+					   				$origen = imagecreatefromjpeg($_FILES['photo']['tmp_name']);
+					   				$destino = imagecreatetruecolor($nuevoAncho, $nuevoAlto);
+					   				imagecopyresized($destino, $origen, 0, 0, 0, 0, $nuevoAncho, $nuevoAlto, $ancho, $alto);
+					   				imagejpeg($destino,$ruta);
+					   				break;
+					   			case 'image/png':
+					   				$preruta = date('Y-m-d_his');
+					   				$preruta = (string)$preruta;
+					   				$ruta = $directorio.'/'.$_POST['newUsername'].'_'.$preruta.'.png';
+					   				$origen = imagecreatefrompng($_FILES['photo']['tmp_name']);
+					   				$destino = imagecreatetruecolor($nuevoAncho, $nuevoAlto);
+					   				imagecopyresized($destino, $origen, 0, 0, 0, 0, $nuevoAncho, $nuevoAlto, $ancho, $alto);
+					   				imagepng($destino,$ruta);
+					   				break;
+					   			default:
+					   				# code...
+					   				break;
+					   		}
+					   	}
+					   	if (session('rank')==1000000) {
+					   		$corpId=$_POST['newCorporationId'];
+					   	}else{
+					   		$corpId =$creator->corporation_id;
+					   	}
+					   	$answer = new ludciscorp\User();
+					   	$answer->name = $_POST['newName'];
+					   	$answer->username = $_POST['newUsername'];
+					   	$answer->password = password_hash($_POST["newPassword"], PASSWORD_DEFAULT);
+					   	$answer->rank = $_POST['rol'];
+					   	$answer->photo = $ruta;
+					   	$answer->corporation_id = $corpId;
+					   	$answer->id_type = $_POST['newIdType'];
+					   	$answer->id_number = $_POST['newIdNumber'];
+					   	$answer->email = $_POST['newEmail'];
+					   if ($answer->save()) {
+					   	return redirect('/usuarios');
+					   }
+					 } else {
+					 	return view('layouts.users_error');
+					 }
+				}else{
+					return redirect('/');
+				}
+			}else{
+			 	return view('layouts.permisions_error');
+			}
+			
+		}else{
+			return view('layouts.user_number_error');
+		}
+
+	}
+	/*===================================
+	=            USER EDIT            =
+	===================================*/
+	static public function ctrEditarUsuario(){
+		$creator = ludciscorp\User::find(session('id'));
+		$corporation = $creator->corporation;
+		$usersCount = count($corporation->users);
+		if ($usersCount < $corporation->user_limit) {
+			if (session('rank')==2 || session('rank')==1000000) {
+			if (isset($_POST['editUser'])) {
+				if (preg_match('/^[a-zA-Z0-9ñÑáéíóúÁÉÍÓÚ ]+$/', $_POST["newName"])) {
+				   	/*======================================
+				   	=            Validar Imagen             =
+				   	======================================*/
+				   	$ruta=$_POST['lastPhoto'];
+				   	if (isset($_FILES['photo']['tmp_name']) && !empty($_FILES['photo']['tmp_name'])) {
+				   		list($ancho,$alto) = getimagesize($_FILES['photo']['tmp_name']);
+				   		$nuevoAncho = 500;
+				   		$nuevoAlto = 500;
+				   		/*==========================================
+				   		=            CREANDO DIRECTORIO            =
+				   		==========================================*/
+				   		$directorio = "Views/img/usuarios/".$_POST['newUsername'];
+				   		if (!empty($_POST['lastPhoto'])) {
+				   			unlink($_POST['lastPhoto']);
+				   		}else{
+				   			mkdir($directorio,0755);
+				   		}
+				   		
+				   		
+				   		/*===========================================================================
+				   		=            Funciones defecto PHP dependiendo de tipo de imagen            =
+				   		===========================================================================*/
+				   		switch ($_FILES['photo']['type']) {
+				   			case 'image/jpeg':
+				   				$preruta = date('Y-m-d_his');
+				   				$preruta = (string)$preruta;
+				   				$ruta = $directorio.'/'.$_POST['newUsername'].'_'.$preruta.'.jpg';
+				   				$origen = imagecreatefromjpeg($_FILES['photo']['tmp_name']);
+				   				$destino = imagecreatetruecolor($nuevoAncho, $nuevoAlto);
+				   				imagecopyresized($destino, $origen, 0, 0, 0, 0, $nuevoAncho, $nuevoAlto, $ancho, $alto);
+				   				imagejpeg($destino,$ruta);
+				   				break;
+				   			case 'image/png':
+				   				$preruta = date('Y-m-d_his');
+				   				$preruta = (string)$preruta;
+				   				$ruta = $directorio.'/'.$_POST['newUsername'].'_'.$preruta.'.png';
+				   				$origen = imagecreatefrompng($_FILES['photo']['tmp_name']);
+				   				$destino = imagecreatetruecolor($nuevoAncho, $nuevoAlto);
+				   				imagecopyresized($destino, $origen, 0, 0, 0, 0, $nuevoAncho, $nuevoAlto, $ancho, $alto);
+				   				imagepng($destino,$ruta);
+				   				break;
+				   			default:
+				   				# code...
+				   				break;
+				   		}
+				   		
+				   		
+				   	}
+					$answer = ludciscorp\User::where('username',$_POST['newUsername'])->first();
+				   	if ($_POST['newPassword'] != "") {
+				   		$password = password_hash($_POST["newPassword"], PASSWORD_DEFAULT);
+				   	}else{
+				   		$password=$answer->password;
+				   	}
+				   	$answer->name = $_POST['newName'];
+				   	$answer->password = $password;
+				   	$answer->type = $_POST['rol'];
+				   	$answer->photo = $ruta;
+				   	$answer->id_type = $_POST['newIdType'];
+				   	$answer->id_number = $_POST['newIdNumber'];
+				   	$answer->email = $_POST['newEmail'];
+				   if ($answer->save()) {
+				   	return redirect('/usuarios');			   
+				   }
+				 } else {
+				 	return view('layouts.users_error');
+				 }
+				}else{
+					return redirect('/');
+				}
+			}else{
+			 	return view('layouts.permisions_error');
+			}
+			
+		}else{
+			return view('layouts.user_number_error');
+		}
+
+	}
+	/*======================================
+	=            Borrar usuario            =
+	======================================*/
+	static public function ctrEliminarUsuario(){
+		$creator = ludciscorp\User::find(session('id'));
+		$corporation = $creator->corporation;
+		$answer=ludciscorp\User::find($_POST['idUsuario']);
+		if ((session('rank')==2 && $corporation == $answer->corporation) || session('rank')==1000000) {
+			if (isset($_POST['idUsuario'])) {
+				if ($_POST['fotoUsuario'] != "") {
+					unlink($_POST["fotoUsuario"]);
+					rmdir('Views/img/usuarios/'.$_POST['usuario']);
+				}
+			$answer->delete();
+			}
+		}else{
+		 	return view('layouts.permisions_error');
+		}
+	}
+	static public function ctrSalidaUsuario(){
+		Session::flush();
+		return redirect('/');
+	}
+	public function ajaxEditarUsuario(){
+		if (session('rank')==2 || session('rank')==1000000) {
+			$answer = ludciscorp\User::find($_POST['idUsuario']);
+			echo json_encode($answer);
+		}
+	} 
+	public function ajaxEditarme(){
+		$answer = ludciscorp\User::find(session('id'));
+		echo json_encode($answer);
+	} 
+	public function ajaxActivarUsuario(){
+		$creator = ludciscorp\User::find(session('id'));
+		$corporation = $creator->corporation;
+		$answer=ludciscorp\User::find($_POST['activarUsuario']);
+		if ((session('rank')==2 && $corporation == $answer->corporation) || session('rank')==1000000) {
+			$answer = ludciscorp\User::find($_POST['activarUsuario']);
+			$answer->state = $_POST['estadoUsuario'];
+			$answer->save();
+		}
+	} 
+	public function ajaxChequearUsuario(){
+		$answer = ludciscorp\User::where('username',$_POST['userCheck'])->first();
+		echo json_encode($answer);
+	} 
+	public function ctrEditarme(){
+				
+		$answer = ludciscorp\User::find(session('id'));
+
+		if (isset($_POST['editUser'])) {
+			   	/*======================================
+			   	=            Validar Imagen             =
+			   	======================================*/
+			   	$ruta=$answer->photo;
+			   	if (isset($_FILES['photo']['tmp_name']) && !empty($_FILES['photo']['tmp_name'])) {
+			   		list($ancho,$alto) = getimagesize($_FILES['photo']['tmp_name']);
+			   		$nuevoAncho = 500;
+			   		$nuevoAlto = 500;
+			   		/*==========================================
+			   		=            CREANDO DIRECTORIO            =
+			   		==========================================*/
+					$directorio = "Views/img/usuarios/".$answer->username;
+			   		if (!empty($answer->photo)) {
+			   			unlink($answer->photo);
+			   		}else{
+			   			mkdir($directorio,0755);
+			   		}
+			   		
+			   		
+			   		/*===========================================================================
+			   		=            Funciones defecto PHP dependiendo de tipo de imagen            =
+			   		===========================================================================*/
+			   		switch ($_FILES['photo']['type']) {
+			   			case 'image/jpeg':
+			   				$preruta = date('Y-m-d_his');
+			   				$preruta = (string)$preruta;
+			   				$ruta = $directorio.'/'.$answer->username.'_'.$preruta.'.jpg';
+			   				$origen = imagecreatefromjpeg($_FILES['photo']['tmp_name']);
+			   				$destino = imagecreatetruecolor($nuevoAncho, $nuevoAlto);
+			   				imagecopyresized($destino, $origen, 0, 0, 0, 0, $nuevoAncho, $nuevoAlto, $ancho, $alto);
+			   				imagejpeg($destino,$ruta);
+			   				break;
+			   			case 'image/png':
+			   				$preruta = date('Y-m-d_his');
+			   				$preruta = (string)$preruta;
+			   				$ruta = $directorio.'/'.$answer->username.'_'.$preruta.'.png';
+			   				$origen = imagecreatefrompng($_FILES['photo']['tmp_name']);
+			   				$destino = imagecreatetruecolor($nuevoAncho, $nuevoAlto);
+			   				imagecopyresized($destino, $origen, 0, 0, 0, 0, $nuevoAncho, $nuevoAlto, $ancho, $alto);
+			   				imagepng($destino,$ruta);
+			   				break;
+			   			default:
+			   				# code...
+			   				break;
+			   		}
+			   		
+			   		
+			   	}
+			   	if ($_POST['newPassword'] != "") {
+			   		$password = password_hash($_POST["newPassword"], PASSWORD_DEFAULT);
+			   	}else{
+			   		$password=$answer->password;
+			   	}
+			   	$answer->password = $password;
+			   	$answer->photo = $ruta;
+			   	if ($answer->save()) {
+			   		return redirect('/?updated=true');
+			   	}else{
+			   		return redirect('/?updated=false');
+			   	}
+			   	}
+			   	return redirect('/');
+	}
+	/*===============================================
+	=            Mostrar tabla propiedades           =
+	===============================================*/
+	
+	public function ajaxDatatableUsuarios(){
+		if (session('rank')) {
+			switch (session('rank')) {
+				case 1000000:
+		  			$users = ludciscorp\User::all();
+					break;
+				case 2:
+					$me = ludciscorp\User::find(session('id'));
+		  			$users = ludciscorp\User::where('corporation_id', $me->corporation_id)->get();
+					break;
+				
+				default:
+					$users = '';
+					break;
+			}
+		  	echo '{
+					"data": [';
+
+				for($i = 0; $i < count($users)-1; $i++){
+					/*=============================
+					=            Stock            =
+					=============================*/
+					$document = "<b>".$users[$i]->id_type.".</b> ".$users[$i]->id_number;
+					if ($users[$i]->photo != null && $users[$i]->photo != "") {
+						$img ="<img src='".$users[$i]->photo."' class='img-thumbnail' width='40px'>";
+					}else{
+						$img ="<img src='Views/img/usuarios/anonymous.png' class='img-thumbnail' width='40px'>";
+					}
+					if ($users[$i]->state == 1) {
+						$state ="<button class='btn btn-success btn-sm btnActivar' idUsuario='".$users[$i]->id."' estadoUsuario='0'>Activado</button>";
+					}else{
+						$state ="<button class='btn btn-danger btn-sm btnActivar' idUsuario='".$users[$i]->id."' estadoUsuario='1'>Desactivado</button>";
+					}
+					if ($users[$i]->rank == 1000000) {
+						$rank ="Superadmin";
+					}elseif ($users[$i]->rank == 2) {
+						$rank ="Admin";
+					}else{
+						$rank ="Estandar";
+					}
+	                    $buttons ="<div class='btn-group'><button class='btn btn-warning btnEditarUsuario' idUsuario='".$users[$i]->id."' data-toggle='modal' data-target='#modalEditarUsuario'><i class='fa fa-pen'></i></button><button class='btn btn-danger btnBorrarUsuario' idUsuario='".$users[$i]->id."' fotoUsuario='".$users[$i]->photo."' usuario='".$users[$i]->username."'><i class='fa fa-times'></i></button></div>";
+					 echo '[
+				      "'.($i+1).'",
+				      "'.$users[$i]->corporation->name.'",
+				      "'.$img.'",
+				      "'.$users[$i]->name.'",
+				      "'.$document.'",
+				      "'.$state.'",
+				      "'.$users[$i]->username.'",
+				      "'.$rank.'",
+				      "'.$users[$i]->email.'",
+				      "'.$users[$i]->last_log.'",
+				      "'.$buttons.'"
+				    ],';
+
+				}
+					$document = "<b>".$users[count($users)-1]->id_type.".</b> ".$users[count($users)-1]->id_number;
+					if ($users[count($users)-1]->photo != null && $users[count($users)-1]->photo != "") {
+						$img ="<img src='".$users[count($users)-1]->photo."' class='img-thumbnail' width='40px'>";
+					}else{
+						$img ="<img src='Views/img/usuarios/anonymous.png' class='img-thumbnail' width='40px'>";
+					}
+					if ($users[count($users)-1]->state == 1) {
+						$state ="<button class='btn btn-success btn-sm btnActivar' idUsuario='".$users[count($users)-1]->id."' estadoUsuario='0'>Activado</button>";
+					}else{
+						$state ="<button class='btn btn-danger btn-sm btnActivar' idUsuario='".$users[count($users)-1]->id."' estadoUsuario='1'>Desactivado</button>";
+					}
+					if ($users[count($users)-1]->rank == 1000000) {
+						$rank ="Superadmin";
+					}elseif ($users[count($users)-1]->rank == 2) {
+						$rank ="Admin";
+					}else{
+						$rank ="Estandar";
+					}
+	                    $buttons ="<div class='btn-group'><button class='btn btn-warning btnEditarUsuario' idUsuario='".$users[count($users)-1]->id."' data-toggle='modal' data-target='#modalEditarUsuario'><i class='fa fa-pen'></i></button><button class='btn btn-danger btnBorrarUsuario' idUsuario='".$users[count($users)-1]->id."' fotoUsuario='".$users[count($users)-1]->photo."' usuario='".$users[count($users)-1]->username."'><i class='fa fa-times'></i></button></div>";
+					 echo '[
+				      "'.(count($users)).'",
+				      "'.$users[count($users)-1]->corporation->name.'",
+				      "'.$img.'",
+				      "'.$users[count($users)-1]->name.'",
+				      "'.$document.'",
+				      "'.$state.'",
+				      "'.$users[count($users)-1]->username.'",
+				      "'.$rank.'",
+				      "'.$users[count($users)-1]->email.'",
+				      "'.$users[count($users)-1]->last_log.'",
+				      "'.$buttons.'"
+				    ]
+				]
+			}';
+		}else{
+			echo "Wrong Auth!";
+			
+		}
+	}/node_modules
+/public/hot
+/public/storage
+/storage/*.key
+/vendor
+.env
+.env.backup
+.phpunit.result.cache
+Homestead.json
+Homestead.yaml
+npm-debug.log
+yarn-error.log

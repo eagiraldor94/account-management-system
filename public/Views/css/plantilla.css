@@ -1,0 +1,17 @@
+#textoBienvenida{
+	padding-left: 20%;
+	padding-right: 20%;
+}
+a.ui-menu-item-wrapper:hover{
+	background-color: none !important;
+	color: inherit !important;
+}
+a.ui-menu-item-wrapper.ui-state-active{
+	background: inherit !important;
+	color: #d9d9d9 !important;
+	border: none !important;
+}
+li.ui-menu-item:hover{
+	background: none !important;
+	background-color: #696969 !important;
+}
