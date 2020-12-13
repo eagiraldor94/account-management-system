@@ -62,6 +62,12 @@
               <p>Suscripciones</p>
             </a>
           </li>
+          <li class="nav-item">
+            <a href="/correos" class="nav-link" id="correos">
+              <i class="nav-icon fas fa-envelope"></i>
+              <p>Correos</p>
+            </a>
+          </li>
         </ul>
       </nav>
 

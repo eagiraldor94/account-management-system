@@ -24,6 +24,7 @@ Route::get('usuarios','GeneralController@usersView');
 Route::get('clientes','GeneralController@clientsView');
 Route::get('servicios','GeneralController@servicesView');
 Route::get('suscripciones','GeneralController@subscriptionsView');
+Route::get('correos','GeneralController@mailsView');
 Route::get('imprimir/{id}','GeneralController@printContract');
 // Route::get('carga/clientes', 'ClientController@ctrClientImport');
 Route::get('carga/suscripciones', 'SubscriptionController@ctrSubscriptionImport');
@@ -69,6 +70,15 @@ Route::post('suscripciones', 'SubscriptionController@ctrSubscriptionCreate');
 Route::post('suscripciones/editar', 'SubscriptionController@ctrSubscriptionEdit');
 Route::post('ajax/datatable/suscripciones','SubscriptionController@ajaxDatatableSuscripciones');
 Route::post('ajax/suscripciones/activar','SubscriptionController@ajaxSubscriptionActivation');
+
+/*====================================
+=           Correos           =
+====================================*/
+Route::post('ajax/correos/editar','MailController@ajaxMailEdit');
+Route::post('ajax/correos/borrar','MailController@ctrMailDelete');
+Route::post('correos', 'MailController@ctrMailCreate');
+Route::post('correos/editar', 'MailController@ctrMailEdit');
+Route::post('ajax/datatable/correos','MailController@ajaxDatatableCorreos');
 
 /*=============================
 =            Redireccion           =

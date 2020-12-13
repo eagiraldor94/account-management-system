@@ -57,6 +57,13 @@ class GeneralController extends Controller
           return redirect('/');
       }
   }
+    public function mailsView(Request $request){
+      if (session('id')) {
+          return view('layouts.mails');
+      }else{
+          return redirect('/');
+      }
+  }
   	public function printContract($id){
       if (session('id')) {
           setlocale(LC_TIME, 'es_ES');

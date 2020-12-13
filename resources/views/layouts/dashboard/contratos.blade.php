@@ -27,14 +27,14 @@
             @endphp
             @if ($diff<0) 
               <div class="alert alert-danger alert-dismissible fade show mx-3" role="alert">
-                <a>La <b>Suscripción</b> de <b>{{$susc->service->name}}</b> perteneciente a <b>{{$susc->client->name}}</b> se encuentra vencida</a>
+                <a>La <b>Suscripción</b> de <b>{{$susc->service->name}}</b> perteneciente a <b>{{$susc->username1}}</b> se encuentra vencida</a>
                 <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                   <span aria-hidden="true">&times;</span>
                 </button>
               </div>
             @elseif ($diff<=2)
               <div class="alert alert-warning alert-dismissible fade show mx-3" role="alert">
-                <a>La <b>Suscripción</b> de <b>{{$susc->service->name}}</b> perteneciente a <b>{{$susc->client->name}}</b> vence en {{$diffH}} horas</a>
+                <a>La <b>Suscripción</b> de <b>{{$susc->service->name}}</b> perteneciente a <b>{{$susc->username1}}</b> vence en {{$diffH}} horas</a>
                 <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                   <span aria-hidden="true">&times;</span>
                 </button>
