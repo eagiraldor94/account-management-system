@@ -117,7 +117,7 @@ class MailController extends Controller
 					}
 	                    $buttons ="<div class='btn-group'><button class='btn btn-warning btnEditarCorreo' idCorreo='".$mails[count($mails)-1]->id."' data-toggle='modal' data-target='#modalEditarCorreo'><i class='fa fa-pen'></i></button><button class='btn btn-danger btnBorrarCorreo' idCorreo='".$mails[count($mails)-1]->id."'><i class='fa fa-times'></i></button></div>";
 					 echo '[
-				      "'.(count($mails)-1+1).'",
+				      "'.(count($mails)).'",
 				      "'.$mails[count($mails)-1]->mail.'",
 				      "'.$mails[count($mails)-1]->password.'",
 				      "'.$mails[count($mails)-1]->recovery.'",

@@ -33,18 +33,43 @@
 
 	    <!-- Main content -->
 	    <section class="content">
-
 	      <div class="row">
 	        @if (session('id'))
           		@include('layouts.dashboard.main-boxes')
 			@endif
-            <div class="row m-3 w-100">
+	      </div>
+	    	<div class="row">
+	    		<div class="col-12">
+		        <!-- Default box -->
+		        <div class="card">
+		          <div class="card-header">
+    				<button class="btn btn-default" data-toggle="modal" data-target="#modalCrearNota"> Crear nota </button>
+		          </div>
+		          
+		          <div class="card-body">
+		            <table class="table table-bordered table-striped tablaNotas dt-responsive">
+					<thead>
+				      <tr>
+				        <th style="width:10px">#</th>
+				        <th style="width: 80%">Nota</th>
+				        <th>Acciones</th>
+				      </tr>
+				    </thead>
+		            </table>
+		            
+		          </div>
+		          <!-- /.card-body -->
+
+		        </div>
+		        <!-- /.card -->
+	    		</div>
+			</div>
+	      <div class="row">
+            <div class="col-12">
                   <div class="alert alert-primary w-100 text-center">
                   <h2>NOTIFICACIONES</h2>
                   </div>
             </div>
-	      </div>
-	      <div class="row">
 	        <div class="col-12">
 	         @if (session('id'))
 	            @include('layouts.dashboard.contratos')
@@ -61,6 +86,8 @@
 	    <!-- /.content -->
 	  </div>
 	  <!-- /.content-wrapper -->
+	  @include('layouts.create_note')
+	  <script src="Views/js/notas.js"></script>
 	@stop
 @else
 	@section('content')

@@ -80,6 +80,15 @@ Route::post('correos', 'MailController@ctrMailCreate');
 Route::post('correos/editar', 'MailController@ctrMailEdit');
 Route::post('ajax/datatable/correos','MailController@ajaxDatatableCorreos');
 
+/*====================================
+=           Notas           =
+====================================*/
+Route::post('ajax/notas/editar','NoteController@ajaxNoteEdit');
+Route::post('ajax/notas/borrar','NoteController@ctrNoteDelete');
+Route::post('notas', 'NoteController@ctrNoteCreate');
+Route::post('notas/editar', 'NoteController@ctrNoteEdit');
+Route::post('ajax/datatable/notas','NoteController@ajaxDatatableNotas');
+
 /*=============================
 =            Redireccion           =
 =============================*/
