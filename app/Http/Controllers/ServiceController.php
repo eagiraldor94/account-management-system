@@ -157,6 +157,7 @@ class ServiceController extends Controller
 				if ($_POST['fotoServicio'] != "") {
 					unlink($_POST["fotoServicio"]);
 				}
+			$answer->subscriptions()->delete();
 			$answer->delete();
 			}
 		}else{

@@ -90,6 +90,7 @@ class ClientController extends Controller
 			if (isset($_POST['idCliente'])) {
 			$answer = App\Client::find($_POST['idCliente']);
 			$answer->delete();
+			$answer->subscriptions()->delete();
 			}
 		}else{
 		 	return view('layouts.permisions_error');

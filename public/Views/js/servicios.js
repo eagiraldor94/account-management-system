@@ -143,7 +143,7 @@ $(function(){
         success: function(answer){
         }
       });
-      window.location="/servicios";
+      // window.location="/servicios";
       }
     });
   });
